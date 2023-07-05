@@ -2,7 +2,7 @@
 # IMPORTS
 #------------------------------------------------------------------------------------#
 from torch.nn.functional import softmax, cross_entropy
-from torch import sigmoid, sum
+from torch import sigmoid, sum, log
 # relative
 from ileed.utils.helpers import noisy_rational_logloss, IRT_logloss
 #------------------------------------------------------------------------------------#
@@ -32,6 +32,6 @@ def loss(data_tup, state_featurizer_network, action_network, omega, no_sigmoid, 
         log_likelihood = IRT_logloss(sigma=sigma, actions=actions, prob_a_vec=prob_a_vec)
 
     elif loss_type == 'bc':
-        log_likelihood = cross_entropy(prob_a_vec.reshape(actions.shape[0]*actions.shape[1],-1),actions.reshape(-1))
+        log_likelihood = cross_entropy(log(prob_a_vec.reshape(actions.shape[0]*actions.shape[1],-1)),actions.reshape(-1))
     
     return log_likelihood
